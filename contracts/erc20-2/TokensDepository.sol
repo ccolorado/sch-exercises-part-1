@@ -38,4 +38,13 @@ contract TokensDepository is Ownable {
 
   }
 
-}
+  function withdraw(address _token, uint256 _amount) external {
+    require(_amount > 0, "withdrawal can not be zero");
+    require(address(tokens[_token]) != address(0), "token is not supported");
+    require(receiptToken[_token].balanceOf(msg.sender) >= _amount, "insufficient funds to withdraw");
+
+    receiptToken[_token].burn(msg.sender, _amount);
+
+    tokens[_token].transfer(msg.sender, _amount);
+
+  }}

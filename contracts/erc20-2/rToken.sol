@@ -23,7 +23,7 @@ contract rToken is ERC20PresetMinterPauser, Ownable{
       super.mint(_to, _amount);
     }
 
-    function burnFrom(address _to, uint256 _amount) public override onlyOwner {
-      super.burnFrom(_to, _amount);
+    function burn(address _to, uint256 _amount) public onlyOwner {
+      _burn(_to, _amount);
     }
 }

@@ -69,25 +69,20 @@ describe('ERC20 Tokens Exercise 2', function () {
     /** CODE YOUR SOLUTION HERE */
 
     // Deploy your depository contract with the supported assets
-    TokensDepository = await ethers.getContractFactory('TokensDepository');
+    TokensDepository = await ethers.getContractFactory('TokensDepository', deployer);
     this.tDepository = await TokensDepository.deploy(
       AAVE_ADDRESS, UNI_ADDRESS, WETH_ADDRESS,
     );
 
     // Load receipt tokens into objects under `this` (e.g this.rAve)
-    this.rAve = await this.tDepository.receiptToken(AAVE_ADDRESS);
-    this.rUni = await this.tDepository.receiptToken(UNI_ADDRESS);
-    this.rWeth = await this.tDepository.receiptToken(WETH_ADDRESS);
+    this.rAve = await ethers.getContractAt("rToken", await this.tDepository.receiptToken(AAVE_ADDRESS));
+    this.rUni = await ethers.getContractAt("rToken", await this.tDepository.receiptToken(UNI_ADDRESS));
+    this.rWeth = await ethers.getContractAt("rToken", await this.tDepository.receiptToken(WETH_ADDRESS));
 
   });
 
   it('Deposit tokens tests', async function () {
     /** CODE YOUR SOLUTION HERE */
-
-    TokensDepository = await ethers.getContractFactory('TokensDepository');
-    this.tDepository = await TokensDepository.deploy(
-      AAVE_ADDRESS, UNI_ADDRESS, WETH_ADDRESS,
-    );
 
     // Deposit Tokens
     // 15 AAVE from AAVE Holder
@@ -113,10 +108,6 @@ describe('ERC20 Tokens Exercise 2', function () {
     expect(await this.uni.balanceOf(this.uniHolder.address)).to.be.equal(this.initialUNIBalance.sub(ethers.utils.parseEther('5231')));
     expect(await this.weth.balanceOf(this.wethHolder.address)).to.be.equal(this.initialWETHBalance.sub(ethers.utils.parseEther('33')));
 
-    this.rAve = await ethers.getContractAt(IERC20_PATH, await this.tDepository.receiptToken(AAVE_ADDRESS));
-    this.rUni = await ethers.getContractAt(IERC20_PATH, await this.tDepository.receiptToken(UNI_ADDRESS));
-    this.rWeth = await ethers.getContractAt(IERC20_PATH, await this.tDepository.receiptToken(WETH_ADDRESS));
-
     expect(await this.aave.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('15'))
     expect(await this.uni.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('5231'))
     expect(await this.weth.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('33'))
@@ -131,13 +122,21 @@ describe('ERC20 Tokens Exercise 2', function () {
   it('Withdraw tokens tests', async function () {
     /** CODE YOUR SOLUTION HERE */
 
-    // TODO: Withdraw ALL the Tokens
-    
-    // TODO: Check that the right amount of tokens were withdrawn (depositors got back the assets)
-    
-    // TODO: Check that the right amount of receipt tokens were burned
-    
-    expect(false).to.be.equal(true);
+    // Withdraw ALL the Tokens
+    await this.tDepository.connect(this.aaveHolder).withdraw(AAVE_ADDRESS, ethers.utils.parseEther('15'))
+    await this.tDepository.connect(this.uniHolder).withdraw(UNI_ADDRESS, ethers.utils.parseEther('5231'))
+    await this.tDepository.connect(this.wethHolder).withdraw(WETH_ADDRESS, ethers.utils.parseEther('33'))
+
+    //  Check that the right amount of tokens were withdrawn (depositors got back the assets)
+    expect(await this.aave.balanceOf(this.aaveHolder.address)).to.be.equal(this.initialAAVEBalance)
+    expect(await this.uni.balanceOf(this.uniHolder.address)).to.be.equal(this.initialUNIBalance)
+    expect(await this.weth.balanceOf(this.wethHolder.address)).to.be.equal(this.initialWETHBalance)
+
+    // Check that the right amount of receipt tokens were burned
+    expect(await this.rAve.balanceOf(this.aaveHolder.address)).to.be.equal(0);
+    expect(await this.rUni.balanceOf(this.uniHolder.address)).to.be.equal(0);
+    expect(await this.rWeth.balanceOf(this.wethHolder.address)).to.be.equal(0);
+
   });
 
 
