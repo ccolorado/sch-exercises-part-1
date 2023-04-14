@@ -15,6 +15,8 @@ describe('ERC20 Tokens Exercise 2', function () {
 
   const ONE_ETH = ethers.utils.parseEther('1');
 
+  const IERC20_PATH = "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20";
+
   before(async function () {
     /** SETUP EXERCISE - DON'T CHANGE ANYTHING HERE */
 
@@ -66,29 +68,64 @@ describe('ERC20 Tokens Exercise 2', function () {
   it('Deploy depository and load receipt tokens', async function () {
     /** CODE YOUR SOLUTION HERE */
 
-    // TODO: Deploy your depository contract with the supported assets
-    
-    // TODO: Load receipt tokens into objects under `this` (e.g this.rAve)
+    // Deploy your depository contract with the supported assets
+    TokensDepository = await ethers.getContractFactory('TokensDepository');
+    this.tDepository = await TokensDepository.deploy(
+      AAVE_ADDRESS, UNI_ADDRESS, WETH_ADDRESS,
+    );
+
+    // Load receipt tokens into objects under `this` (e.g this.rAve)
+    this.rAve = await this.tDepository.receiptToken(AAVE_ADDRESS);
+    this.rUni = await this.tDepository.receiptToken(UNI_ADDRESS);
+    this.rWeth = await this.tDepository.receiptToken(WETH_ADDRESS);
 
   });
 
   it('Deposit tokens tests', async function () {
     /** CODE YOUR SOLUTION HERE */
 
-    // TODO: Deposit Tokens
-    // 15 AAVE from AAVE Holder
-    
-    // 5231 UNI from UNI Holder
-    
-    // 33 WETH from WETH Holder
-    
-    
-    // TODO: Check that the tokens were sucessfuly transfered to the depository
-    
+    TokensDepository = await ethers.getContractFactory('TokensDepository');
+    this.tDepository = await TokensDepository.deploy(
+      AAVE_ADDRESS, UNI_ADDRESS, WETH_ADDRESS,
+    );
 
-    // TODO: Check that the right amount of receipt tokens were minted
-    
-    
+    // Deposit Tokens
+    // 15 AAVE from AAVE Holder
+    await this.aave.connect(this.aaveHolder).approve(this.tDepository.address, ethers.utils.parseEther('15'))
+    await this.tDepository.connect(this.aaveHolder).deposit(this.aave.address, ethers.utils.parseEther('15'))
+
+    // 5231 UNI from UNI Holder
+    await this.uni.connect(this.uniHolder).approve(this.tDepository.address, ethers.utils.parseEther('5231'))
+    await this.tDepository.connect(this.uniHolder).deposit(this.uni.address, ethers.utils.parseEther('5231'))
+
+    // 33 WETH from WETH Holder
+    await this.weth.connect(this.wethHolder).approve(this.tDepository.address, ethers.utils.parseEther('33'))
+    await this.tDepository.connect(this.wethHolder).deposit(this.weth.address, ethers.utils.parseEther('33'))
+
+    // TODO: Check that the tokens were sucessfuly transfered to the depository
+    // credited tokens
+    expect(await this.aave.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('15'));
+    expect(await this.uni.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('5231'));
+    expect(await this.weth.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('33'));
+
+    // debited tokens
+    expect(await this.aave.balanceOf(this.aaveHolder.address)).to.be.equal(this.initialAAVEBalance.sub(ethers.utils.parseEther('15')));
+    expect(await this.uni.balanceOf(this.uniHolder.address)).to.be.equal(this.initialUNIBalance.sub(ethers.utils.parseEther('5231')));
+    expect(await this.weth.balanceOf(this.wethHolder.address)).to.be.equal(this.initialWETHBalance.sub(ethers.utils.parseEther('33')));
+
+    this.rAve = await ethers.getContractAt(IERC20_PATH, await this.tDepository.receiptToken(AAVE_ADDRESS));
+    this.rUni = await ethers.getContractAt(IERC20_PATH, await this.tDepository.receiptToken(UNI_ADDRESS));
+    this.rWeth = await ethers.getContractAt(IERC20_PATH, await this.tDepository.receiptToken(WETH_ADDRESS));
+
+    expect(await this.aave.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('15'))
+    expect(await this.uni.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('5231'))
+    expect(await this.weth.balanceOf(this.tDepository.address)).to.be.equal(ethers.utils.parseEther('33'))
+
+    // Check that the right amount of receipt tokens were minted
+    expect(await this.rAve.balanceOf(this.aaveHolder.address)).to.be.equal(ethers.utils.parseEther('15'));
+    expect(await this.rUni.balanceOf(this.uniHolder.address)).to.be.equal(ethers.utils.parseEther('5231'));
+    expect(await this.rWeth.balanceOf(this.wethHolder.address)).to.be.equal(ethers.utils.parseEther('33'));
+
   });
 
   it('Withdraw tokens tests', async function () {
@@ -100,6 +137,7 @@ describe('ERC20 Tokens Exercise 2', function () {
     
     // TODO: Check that the right amount of receipt tokens were burned
     
+    expect(false).to.be.equal(true);
   });
 
 
