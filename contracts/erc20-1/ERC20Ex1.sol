@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract ERC20Ex1 is ERC20PresetMinterPauser, Ownable {
 
-  constructor(string memory name, string memory symbol) ERC20PresetMinterPauser(name, symbol) Ownable() {
+  constructor(string memory _name, string memory _symbol) ERC20PresetMinterPauser(_name, _symbol) Ownable() {
   }
 
   function mint(address _to, uint256 _amount) public override {
