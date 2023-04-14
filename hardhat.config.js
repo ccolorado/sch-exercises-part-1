@@ -1,4 +1,5 @@
 require('@nomicfoundation/hardhat-toolbox');
+require("hardhat-watcher");
 require('dotenv').config({ path: __dirname + '/.env' });
 
 let scriptName;
@@ -51,6 +52,29 @@ if (
         },
       ],
     },
+    watcher: {
+      compilation: {
+        tasks: ["compile"],
+      },
+      test: {
+        tasks: [ "compile", { command: "test", params: { testFiles: ["{path}"], bail: true } }],
+        files: ["./test/**/*", "./contracts/**/*"],
+        verbose: true,
+      },
+      retest: {
+        tasks: ["compile", "test"],
+        files: ["./test/**/*", "./contracts/**/*"],
+        verbose: true,
+      },
+      retest2: {
+        tasks: [
+          "compile",
+          { command: "test", params: { parallel: true } },
+        ],
+        files: ["./test/**/*", "./contracts/**/*"],
+        verbose: true,
+      },
+    }
   };
 } else {
   module.exports = {
@@ -84,5 +108,28 @@ if (
         },
       ],
     },
+    watcher: {
+      compilation: {
+        tasks: ["compile"],
+      },
+      test: {
+        tasks: [{ command: "test", params: { testFiles: ["{path}"], bail: true } }],
+        files: ["./test/**/*"],
+        verbose: true,
+      },
+      retest: {
+        tasks: ["compile", "test"],
+        files: ["./test/**/*", "./contracts/**/*"],
+        verbose: true,
+      },
+      retest2: {
+        tasks: [
+          "compile",
+          { command: "test", params: { parallel: true } },
+        ],
+        files: ["./test/**/*", "./contracts/**/*"],
+        verbose: true,
+      },
+    }
   };
 }
