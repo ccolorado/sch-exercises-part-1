@@ -113,8 +113,8 @@ if (
         tasks: ["compile"],
       },
       test: {
-        tasks: [{ command: "test", params: { testFiles: ["{path}"], bail: true } }],
-        files: ["./test/**/*"],
+        tasks: [ "compile", { command: "test", params: { testFiles: ["{path}"], bail: true } }],
+        files: ["./test/**/*", "./contracts/**/*"],
         verbose: true,
       },
       retest: {

@@ -16,7 +16,7 @@ contract Game2 {
     constructor() payable {}
 
     function play(bool _guess) external payable {
-        
+
         require(msg.value == 1 ether, "Playing costs 1 ETH");
 
         // uint representation of previous block hash
