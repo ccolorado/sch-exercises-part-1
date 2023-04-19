@@ -29,8 +29,8 @@ contract AIvestICO {
 
     function buy(uint256 numTokens) public payable {
         require(block.timestamp <= startTime + SALE_PERIOD, "ICO is over");
-        
         // 1 ETH = 10 Tokens (1 Token = 0.1 ETH)
+        // POI
         require(msg.value == numTokens * 10 / 100, "wrong ETH amount sent");
 
         token.mint(msg.sender, numTokens);

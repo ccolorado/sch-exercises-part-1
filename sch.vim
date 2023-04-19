@@ -20,19 +20,29 @@ badd +58 Instructions/erc721-2.md
 badd +2 contracts/randomness-vulnerabilities-1/AttackGame.sol
 badd +3 contracts/randomness-vulnerabilities-2/Game2.sol
 badd +43 contracts/utils/DummyERC721.sol
-badd +8 ~/configfiles/home/.vim/custom_snippets/javascript.snippets
+badd +13 ~/configfiles/home/.vim/custom_snippets/javascript.snippets
 badd +134 node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol
-badd +35 contracts/arithmetic-overflows-1/TimeLock.sol
-badd +22 Instructions/arithmetic-overflows-1.md
-badd +52 test/arithmetic-overflows-1/tests.js
+badd +10 contracts/arithmetic-overflows-1/TimeLock.sol
+badd +17 Instructions/arithmetic-overflows-1.md
+badd +39 test/arithmetic-overflows-1/tests.js
 badd +0 contracts/arithmetic-overflows-1/timelockAttack.sol
-badd +0 contracts/arithmetic-overflows-1/TimeLockAttack.sol
-badd +34 ~/configfiles/home/.vim/custom_snippets/solidity.snippets
+badd +9 contracts/arithmetic-overflows-1/TimeLockSafe.sol
+badd +37 ~/configfiles/home/.vim/custom_snippets/solidity.snippets
+badd +1 contracts/arithmetic-overflows-1/TimeLockAttack.sol
+badd +20 Instructions/arithmetic-overflows-2.md
+badd +10 contracts/arithmetic-overflows-2/SimpleTokenSecured.sol
+badd +28 test/arithmetic-overflows-2/tests.js
+badd +84 ~/Notes/solidity
+badd +1 contracts/arithmetic-overflows-2/SimpleToken.sol
+badd +5 test/arithmetic-overflows-3/tests.js
+badd +0 Instructions/arithmetic-overflows-3.md
+badd +623 contracts/arithmetic-overflows-3/AIvestToken.sol
+badd +0 contracts/arithmetic-overflows-3/AIvestICO.sol
 argglobal
 %argdel
 $argadd contracts/erc721-2/OpenOcean.sol
 set lines=92 columns=490
-edit Instructions/arithmetic-overflows-1.md
+edit Instructions/arithmetic-overflows-3.md
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -42,16 +52,10 @@ wincmd _ | wincmd |
 vsplit
 wincmd _ | wincmd |
 vsplit
-wincmd _ | wincmd |
-vsplit
-4wincmd h
-wincmd w
+3wincmd h
 wincmd _ | wincmd |
 split
-wincmd _ | wincmd |
-split
-2wincmd k
-wincmd w
+1wincmd k
 wincmd w
 wincmd w
 wincmd w
@@ -65,31 +69,15 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
-exe 'vert 1resize ' . ((&columns * 31 + 245) / 490)
-exe '2resize ' . ((&lines * 29 + 46) / 92)
-exe 'vert 2resize ' . ((&columns * 114 + 245) / 490)
-exe '3resize ' . ((&lines * 29 + 46) / 92)
-exe 'vert 3resize ' . ((&columns * 114 + 245) / 490)
-exe '4resize ' . ((&lines * 29 + 46) / 92)
-exe 'vert 4resize ' . ((&columns * 114 + 245) / 490)
-exe 'vert 5resize ' . ((&columns * 114 + 245) / 490)
-exe 'vert 6resize ' . ((&columns * 113 + 245) / 490)
-exe 'vert 7resize ' . ((&columns * 114 + 245) / 490)
+exe '1resize ' . ((&lines * 44 + 46) / 92)
+exe 'vert 1resize ' . ((&columns * 122 + 245) / 490)
+exe '2resize ' . ((&lines * 44 + 46) / 92)
+exe 'vert 2resize ' . ((&columns * 122 + 245) / 490)
+exe 'vert 3resize ' . ((&columns * 122 + 245) / 490)
+exe 'vert 4resize ' . ((&columns * 121 + 245) / 490)
+exe 'vert 5resize ' . ((&columns * 122 + 245) / 490)
 argglobal
-enew
-file NERD_tree_1
-balt contracts/arithmetic-overflows-1/TimeLock.sol
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal nofen
-wincmd w
-argglobal
-balt contracts/arithmetic-overflows-1/TimeLock.sol
+balt test/arithmetic-overflows-3/tests.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -100,29 +88,11 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 22 - ((14 * winheight(0) + 14) / 29)
+let s:l = 1 - ((0 * winheight(0) + 22) / 44)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 22
-normal! 0
-wincmd w
-argglobal
-if bufexists(fnamemodify("~/configfiles/home/.vim/custom_snippets/solidity.snippets", ":p")) | buffer ~/configfiles/home/.vim/custom_snippets/solidity.snippets | else | edit ~/configfiles/home/.vim/custom_snippets/solidity.snippets | endif
-balt ~/configfiles/home/.vim/custom_snippets/javascript.snippets
-setlocal fdm=syntax
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=99
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-let s:l = 36 - ((22 * winheight(0) + 14) / 29)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 36
+keepjumps 1
 normal! 0
 wincmd w
 argglobal
@@ -136,16 +106,16 @@ setlocal fdl=99
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 8 - ((7 * winheight(0) + 14) / 29)
+let s:l = 15 - ((14 * winheight(0) + 22) / 44)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 8
+keepjumps 15
 normal! 0
 wincmd w
 argglobal
-if bufexists(fnamemodify("contracts/arithmetic-overflows-1/TimeLock.sol", ":p")) | buffer contracts/arithmetic-overflows-1/TimeLock.sol | else | edit contracts/arithmetic-overflows-1/TimeLock.sol | endif
-balt Instructions/erc721-2.md
+if bufexists(fnamemodify("contracts/arithmetic-overflows-3/AIvestICO.sol", ":p")) | buffer contracts/arithmetic-overflows-3/AIvestICO.sol | else | edit contracts/arithmetic-overflows-3/AIvestICO.sol | endif
+balt contracts/arithmetic-overflows-3/AIvestToken.sol
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -156,15 +126,36 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 25 - ((24 * winheight(0) + 44) / 89)
+let s:l = 39 - ((36 * winheight(0) + 44) / 89)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 25
+keepjumps 39
+normal! 023|
+wincmd w
+argglobal
+if bufexists(fnamemodify("contracts/arithmetic-overflows-3/AIvestICO.sol", ":p")) | buffer contracts/arithmetic-overflows-3/AIvestICO.sol | else | edit contracts/arithmetic-overflows-3/AIvestICO.sol | endif
+balt contracts/arithmetic-overflows-3/AIvestToken.sol
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 48 - ((44 * winheight(0) + 44) / 89)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 48
 normal! 0
 wincmd w
 argglobal
-if bufexists(fnamemodify("contracts/arithmetic-overflows-1/TimeLockAttack.sol", ":p")) | buffer contracts/arithmetic-overflows-1/TimeLockAttack.sol | else | edit contracts/arithmetic-overflows-1/TimeLockAttack.sol | endif
+if bufexists(fnamemodify("test/arithmetic-overflows-3/tests.js", ":p")) | buffer test/arithmetic-overflows-3/tests.js | else | edit test/arithmetic-overflows-3/tests.js | endif
+balt test/arithmetic-overflows-2/tests.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -175,44 +166,21 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 37 - ((36 * winheight(0) + 44) / 89)
+let s:l = 22 - ((9 * winheight(0) + 44) / 89)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 37
-normal! 05|
+keepjumps 22
+normal! 024|
 wincmd w
-argglobal
-if bufexists(fnamemodify("test/arithmetic-overflows-1/tests.js", ":p")) | buffer test/arithmetic-overflows-1/tests.js | else | edit test/arithmetic-overflows-1/tests.js | endif
-balt test/erc721-2/tests.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 37 - ((29 * winheight(0) + 44) / 89)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 37
-normal! 014|
-wincmd w
-7wincmd w
-exe 'vert 1resize ' . ((&columns * 31 + 245) / 490)
-exe '2resize ' . ((&lines * 29 + 46) / 92)
-exe 'vert 2resize ' . ((&columns * 114 + 245) / 490)
-exe '3resize ' . ((&lines * 29 + 46) / 92)
-exe 'vert 3resize ' . ((&columns * 114 + 245) / 490)
-exe '4resize ' . ((&lines * 29 + 46) / 92)
-exe 'vert 4resize ' . ((&columns * 114 + 245) / 490)
-exe 'vert 5resize ' . ((&columns * 114 + 245) / 490)
-exe 'vert 6resize ' . ((&columns * 113 + 245) / 490)
-exe 'vert 7resize ' . ((&columns * 114 + 245) / 490)
+5wincmd w
+exe '1resize ' . ((&lines * 44 + 46) / 92)
+exe 'vert 1resize ' . ((&columns * 122 + 245) / 490)
+exe '2resize ' . ((&lines * 44 + 46) / 92)
+exe 'vert 2resize ' . ((&columns * 122 + 245) / 490)
+exe 'vert 3resize ' . ((&columns * 122 + 245) / 490)
+exe 'vert 4resize ' . ((&columns * 121 + 245) / 490)
+exe 'vert 5resize ' . ((&columns * 122 + 245) / 490)
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
