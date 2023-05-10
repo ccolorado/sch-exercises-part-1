@@ -35,9 +35,11 @@
     "@typechain/hardhat": "^6.1.5",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^9.1.1",
+    "chai": "^4.3.7",
     "hardhat": "^2.10.0",
     "hardhat-gas-reporter": "^1.0.9",
     "hardhat-watcher": "^2.5.0",
+    "solidity-coverage": "^0.7.22",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.1",
     "typescript": "^5.0.4"

