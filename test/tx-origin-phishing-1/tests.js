@@ -28,12 +28,14 @@ describe('TX Origin Phishing Exercise 1', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR SOLUTION HERE */
-        
+        const attackerFactory = await ethers.getContractFactory( 'AttackSimpleSmartWallet', attacker);
+        this.attackerContract = await attackerFactory.deploy(this.wallet.address)
+
     });
 
     after(async function () {
         /** SUCCESS CONDITIONS */
-        
+
         // Fund manager is tricked to send a donation to the "charity" (attacker's contract)
         await fundManager.sendTransaction({
             to: this.attackerContract.address,
